@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:57 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/11 08:52:04 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/15 23:27:32 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	parsing(char **av)
 
 void	fill_struct(int ac, char **av, t_data *data)
 {
+	data = malloc(sizeof(t_data));
 	data->num_philo =ft_atoi(av[1]);
 	data->time_die =ft_atoi(av[2]);
 	data->time_eat =ft_atoi(av[3]);
@@ -44,4 +45,5 @@ void	fill_struct(int ac, char **av, t_data *data)
 		data->num_meal = ft_atoi(av[5]);
 	else
 		data->num_meal = 0;
+	philo_info(data);
 }

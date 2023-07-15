@@ -6,43 +6,51 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:08 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/11 08:33:14 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/15 23:33:40 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void philo_info(t_philo *philo, int index)
-{
-	philo->id++;
-}
 
-void *routine()
+void *routine(void *philo)
 {
+
+	t_philo *ph;
+	t_data *dt;
+
+	ph = (t_philo *)philo;
+	dt = ph->d_data;
+	if (ph->id == 0)
+		dt->timer  = get_current_time_ms();
+	printf("%d\n",dt->time_eat);
+	if (dt->p_philo->id % 2 == 0)
+		usleep(200);
+	while (1)
+	{
+		printf("%lld %d is eating\n",(get_current_time_ms() - dt->timer) ,dt->p_philo->id);
+	}	
 	return NULL;
 }
 
-int make_philo(t_data *data, t_philo *philo)
+int make_philo(t_data *data)
 {
-	int	index;
 
-	philo->id = 0;
-	philo->ph = malloc(sizeof(philo) * data->num_philo);
-	index = 0;
-	while (data->num_philo > index)
+	int	i;
+	i = 0;
+	while (i < data->num_philo)
 	{
-
-		philo_info(philo, index);
-		if (pthread_create(&philo->ph[index], NULL, &routine, NULL) != 0)
+		if (pthread_create(&data->p_philo[i].ph, NULL, &routine, &data->p_philo[i]) != 0)
 			return (-1);
-		index++;
+		i++;
 	}
-	index = 0;
-	while (data->num_philo > index)
+	i = 0;
+	while (data->num_philo > i)
 	{
-		if (pthread_join(philo->ph[index], NULL) != 0)
+		if (pthread_join(data->p_philo[i].ph, NULL) != 0)
 			return (-1);
-		index++;
+		i++;
 	}
 	return (0);
 }
+
