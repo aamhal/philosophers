@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:57 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/15 23:27:32 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/15 23:56:56 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,32 @@ int	parsing(char **av)
 void	fill_struct(int ac, char **av, t_data *data)
 {
 	data = malloc(sizeof(t_data));
-	data->num_philo =ft_atoi(av[1]);
-	data->time_die =ft_atoi(av[2]);
-	data->time_eat =ft_atoi(av[3]);
-	data->time_sleep =ft_atoi(av[4]);
+	data->num_philo = ft_atoi(av[1]);
+	data->time_die = ft_atoi(av[2]);
+	data->time_eat = ft_atoi(av[3]);
+	data->time_sleep = ft_atoi(av[4]);
 	if (ac == 6)
 		data->num_meal = ft_atoi(av[5]);
 	else
 		data->num_meal = 0;
 	philo_info(data);
+}
+
+void philo_info(t_data *data)
+{
+	int i;
+
+	data->p_philo = malloc(sizeof(t_philo) * data->num_philo);
+	i = 0;
+	while (i < data->num_philo)
+	{
+		data->p_philo[i].id = i;
+		data->p_philo[i].d_data = data;
+		data->p_philo[i].num_eaten = 0;
+		data->p_philo[i].last_eat = 0;
+		data->p_philo[i].r_fork = i;
+		data->p_philo[i].l_fork = (i + 1) % data->num_philo;
+		i++;
+	}
+	make_philo(data);
 }

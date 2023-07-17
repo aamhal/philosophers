@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:27:22 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/15 23:27:23 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/16 00:59:47 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ int main(int ac, char **av)
 		return (1);
 	}
 	t_data data;
-
+	
 	fill_struct(ac, av, &data);
 	return (0);
-	
 }

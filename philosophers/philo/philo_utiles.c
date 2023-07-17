@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:27:16 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/15 23:30:50 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/16 23:35:58 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,4 @@ long long get_current_time_ms()
     return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000LL);
 }
 
-void philo_info(t_data *data)
-{
-	int i;
-	data->p_philo = malloc(sizeof(t_philo) * data->num_philo);
-	i = 0;
-	while (i < data->num_philo)
-	{
-		data->p_philo[i].id = i;
-		data->p_philo[i].d_data = data;
-		data->p_philo[i].num_eaten = 0;
-		data->p_philo[i].last_eat = 0;
-		data->p_philo[i].r_fork = i;
-		data->p_philo[i].l_fork = (i + 1) % data->num_philo;
-		i++;
-	}
-	make_philo(data);
-}
+// void ft_usleep()

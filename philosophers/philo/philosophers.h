@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:32:44 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/15 23:30:06 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/17 06:06:01 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_Philosophers
 	pthread_t ph;
 	int id;
 	int num_eaten;
-	int last_eat;
+	long long last_eat;
 	int r_fork;
 	int l_fork;
 }t_philo;
@@ -40,20 +40,21 @@ typedef struct s_data
 	int time_sleep;
 	int num_meal;
 	long long timer;
+	pthread_mutex_t forks;
 }t_data;
 
 
 //parsing
 int	parsing(char **av);
 void	fill_struct(int ac, char **av, t_data *data);
+void philo_info(t_data *data);
 
 //philo_utiles
 int	ft_isdigit(int c);
 int	ft_atoi(const char *str);
 long long get_current_time_ms() ;
-void philo_info(t_data *data);
 
-//philo
+//philos
 int make_philo(t_data *data);
 void *routine(void *philo);
 
