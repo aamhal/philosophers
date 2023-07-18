@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:08 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/18 01:38:10 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/18 01:58:50 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void *routine(void *philo)
         // Eating
         ft_print(dt,ph->id, "is eating");
         ft_usleep(dt->time_eat);
+        pthread_mutex_unlock(&dt->forks[ph->r_fork]);
+        pthread_mutex_unlock(&dt->forks[ph->l_fork]);
         pthread_mutex_lock(&dt->meals);
         dt->num_meal--;
         pthread_mutex_unlock(&dt->meals);
@@ -59,8 +61,6 @@ void *routine(void *philo)
             return NULL;
 
         // Release forks
-        pthread_mutex_unlock(&dt->forks[ph->r_fork]);
-        pthread_mutex_unlock(&dt->forks[ph->l_fork]);
 
         // Sleeping
         ft_print(dt,ph->id, "is sleeping");
@@ -80,10 +80,14 @@ int make_philo(t_data *data)
     
 	i = 0;
     data->forks = malloc(sizeof(pthread_mutex_t *) * data->num_philo);
+    while (i < data->num_philo)
+    {
+	    pthread_mutex_init(&data->forks[i], NULL);
+        i++;
+    }
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->meals, NULL);
-	pthread_mutex_init(&data->forks[data->p_philo->r_fork], NULL);
-	pthread_mutex_init(&data->forks[data->p_philo->l_fork], NULL);
+    i = 0;
 	while (i < data->num_philo)
 	{
 		if (pthread_create(&data->p_philo[i].ph, NULL, &routine, &data->p_philo[i]) != 0)
@@ -97,10 +101,13 @@ int make_philo(t_data *data)
 			return (-1);
 		i++;
 	}
+    while (i < data->num_philo)
+    {
+	    pthread_mutex_destroy(&data->forks[i]);
+            i++;
+    }
 	pthread_mutex_destroy(&data->print);
 	pthread_mutex_destroy(&data->meals);
-	pthread_mutex_destroy(&data->forks[data->p_philo->r_fork]);
-	pthread_mutex_destroy(&data->forks[data->p_philo->l_fork]);
 	return (0);
 }
 
