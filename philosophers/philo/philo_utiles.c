@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:27:16 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/16 23:35:58 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/18 01:00:05 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,29 @@ long long get_current_time_ms()
     return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000LL);
 }
 
-// void ft_usleep()
+void ft_usleep(long long time)
+{
+	long long timer;
+	timer = get_current_time_ms();
+	while (1)
+	{
+		if ((get_current_time_ms() - timer) >= time)
+			return ;
+	}
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n && (s1[i] || s2[i]))
+	{
+		if (((unsigned char *)s1)[i] > ((unsigned char *)s2)[i])
+			return (1);
+		else if (((unsigned char *)s1)[i] < ((unsigned char *)s2)[i])
+			return (-1);
+			i++;
+	}
+	return (0);
+}

@@ -6,12 +6,18 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:08 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/17 00:21:00 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/18 01:38:10 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
+void ft_print(t_data *data,int id,char *msg)
+{
+    pthread_mutex_lock(&data->print);
+    printf("%lld\t%d\t%s\n", (get_current_time_ms() - data->timer), id + 1, msg);
+    if (ft_strncmp(msg, "died", 4))
+        pthread_mutex_unlock(&data->print);
+}
 void *routine(void *philo)
 {
    t_philo *ph;
@@ -28,34 +34,40 @@ void *routine(void *philo)
         while (1)
     {
         // Take forks
-        pthread_mutex_lock(&dt->forks);
-        printf("%lld\t%d\thas taken the forks\n", (get_current_time_ms() - dt->timer), ph->id + 1);
+        pthread_mutex_lock(&dt->forks[ph->r_fork]);
+        ft_print(dt,ph->id, "has taken a fork");
+        // printf("%d\n", ph->r_fork);
+        pthread_mutex_lock(&dt->forks[ph->l_fork]);
+        ft_print(dt,ph->id, "has taken a fork");
+        // printf("%d\n", ph->l_fork);
 
         // Eating
-        printf("%lld\t%d\tis eating\n", (get_current_time_ms() - dt->timer), ph->id + 1);
-        usleep(dt->time_eat * 1000);
+        ft_print(dt,ph->id, "is eating");
+        ft_usleep(dt->time_eat);
+        pthread_mutex_lock(&dt->meals);
         dt->num_meal--;
+        pthread_mutex_unlock(&dt->meals);
         ph->last_eat = get_current_time_ms() - dt->timer;
         if (ph->last_eat >= dt->time_die)
-        {
-            printf("%d is dead\n", ph->id + 1);
-            exit(1);
-        }
-        if (dt->num_meal == 0)
-        {
-            printf("%d----done\n", dt->p_philo->id + 1);
+            ft_print(dt,ph->id, "died");
+        int n;
+        pthread_mutex_lock(&dt->meals);
+        n = dt->num_meal;
+        pthread_mutex_unlock(&dt->meals);
+        
+        if (n == 0)
             return NULL;
-        }
 
         // Release forks
-        pthread_mutex_unlock(&dt->forks);
+        pthread_mutex_unlock(&dt->forks[ph->r_fork]);
+        pthread_mutex_unlock(&dt->forks[ph->l_fork]);
 
         // Sleeping
-        printf("%lld\t%d\tis sleeping\n", (get_current_time_ms() - dt->timer), ph->id + 1);
-        usleep(dt->time_sleep * 1000);
+        ft_print(dt,ph->id, "is sleeping");
+        ft_usleep(dt->time_sleep);
 
         // Thinking
-        printf("%lld\t%d\tis thinking\n", (get_current_time_ms() - dt->timer), ph->id + 1);
+        ft_print(dt,ph->id,"is thinking");
     }
 
     return NULL;
@@ -65,8 +77,13 @@ int make_philo(t_data *data)
 {
 
 	int	i;
+    
 	i = 0;
-	pthread_mutex_init(&data->forks, NULL);
+    data->forks = malloc(sizeof(pthread_mutex_t *) * data->num_philo);
+	pthread_mutex_init(&data->print, NULL);
+	pthread_mutex_init(&data->meals, NULL);
+	pthread_mutex_init(&data->forks[data->p_philo->r_fork], NULL);
+	pthread_mutex_init(&data->forks[data->p_philo->l_fork], NULL);
 	while (i < data->num_philo)
 	{
 		if (pthread_create(&data->p_philo[i].ph, NULL, &routine, &data->p_philo[i]) != 0)
@@ -74,13 +91,16 @@ int make_philo(t_data *data)
 		i++;
 	}
 	i = 0;
-	while (data->num_philo > i)
+	while (i < data->num_philo)
 	{
 		if (pthread_join(data->p_philo[i].ph, NULL) != 0)
 			return (-1);
 		i++;
 	}
-	pthread_mutex_destroy(&data->forks);
+	pthread_mutex_destroy(&data->print);
+	pthread_mutex_destroy(&data->meals);
+	pthread_mutex_destroy(&data->forks[data->p_philo->r_fork]);
+	pthread_mutex_destroy(&data->forks[data->p_philo->l_fork]);
 	return (0);
 }
 
