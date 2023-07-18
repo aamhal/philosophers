@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:32:44 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/18 01:05:34 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/18 23:03:28 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ typedef struct s_data
 	int time_eat;
 	int time_sleep;
 	int num_meal;
+	int is_dead;
 	long long timer;
 	pthread_mutex_t *forks;
 	pthread_mutex_t print;
-	pthread_mutex_t meals;
+	pthread_mutex_t mutex;
 }t_data;
 
 

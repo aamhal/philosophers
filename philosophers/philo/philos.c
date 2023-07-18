@@ -6,18 +6,22 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:08 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/18 01:58:50 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/18 23:03:46 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
 void ft_print(t_data *data,int id,char *msg)
 {
     pthread_mutex_lock(&data->print);
     printf("%lld\t%d\t%s\n", (get_current_time_ms() - data->timer), id + 1, msg);
     if (ft_strncmp(msg, "died", 4))
+    {
         pthread_mutex_unlock(&data->print);
+    }
 }
+
 void *routine(void *philo)
 {
    t_philo *ph;
@@ -46,16 +50,22 @@ void *routine(void *philo)
         ft_usleep(dt->time_eat);
         pthread_mutex_unlock(&dt->forks[ph->r_fork]);
         pthread_mutex_unlock(&dt->forks[ph->l_fork]);
-        pthread_mutex_lock(&dt->meals);
+        pthread_mutex_lock(&dt->mutex);
         dt->num_meal--;
-        pthread_mutex_unlock(&dt->meals);
+        pthread_mutex_unlock(&dt->mutex);
         ph->last_eat = get_current_time_ms() - dt->timer;
         if (ph->last_eat >= dt->time_die)
+        {
             ft_print(dt,ph->id, "died");
+            pthread_mutex_lock(&dt->mutex);
+            dt->is_dead = 1;
+            pthread_mutex_unlock(&dt->mutex);
+            return NULL;
+        }
         int n;
-        pthread_mutex_lock(&dt->meals);
+        pthread_mutex_lock(&dt->mutex);
         n = dt->num_meal;
-        pthread_mutex_unlock(&dt->meals);
+        pthread_mutex_unlock(&dt->mutex);
         
         if (n == 0)
             return NULL;
@@ -84,9 +94,10 @@ int make_philo(t_data *data)
     {
 	    pthread_mutex_init(&data->forks[i], NULL);
         i++;
+        pthread_detach(data->p_philo[i].ph);
     }
 	pthread_mutex_init(&data->print, NULL);
-	pthread_mutex_init(&data->meals, NULL);
+	pthread_mutex_init(&data->mutex, NULL);
     i = 0;
 	while (i < data->num_philo)
 	{
@@ -94,20 +105,24 @@ int make_philo(t_data *data)
 			return (-1);
 		i++;
 	}
-	i = 0;
-	while (i < data->num_philo)
+    while (1)
 	{
-		if (pthread_join(data->p_philo[i].ph, NULL) != 0)
-			return (-1);
-		i++;
-	}
+        pthread_mutex_lock(&data->mutex);
+        if (data->is_dead)
+        {
+            pthread_mutex_unlock(&data->mutex);
+            break ;
+        }
+        pthread_mutex_unlock(&data->mutex);
+    }
+    i = 0;
     while (i < data->num_philo)
     {
 	    pthread_mutex_destroy(&data->forks[i]);
-            i++;
+        i++;
     }
 	pthread_mutex_destroy(&data->print);
-	pthread_mutex_destroy(&data->meals);
+	pthread_mutex_destroy(&data->mutex);
 	return (0);
 }
 
