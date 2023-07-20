@@ -61,6 +61,7 @@ int	ft_atoi(const char *str);
 long long get_current_time_ms();
 void ft_usleep(long long time, t_data *dt, t_philo *ph);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
+void ft_free(t_data *data);
 
 //philos
 int make_philo(t_data *data);
