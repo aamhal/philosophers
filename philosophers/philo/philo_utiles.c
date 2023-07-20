@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:27:16 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/18 01:00:05 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/20 02:26:41 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,20 @@ long long get_current_time_ms()
     return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000LL);
 }
 
-void ft_usleep(long long time)
+void ft_usleep(long long time, t_data *dt, t_philo *ph)
 {
-	long long timer;
-	timer = get_current_time_ms();
+	long long t;
+	t = get_current_time_ms();
 	while (1)
 	{
-		if ((get_current_time_ms() - timer) >= time)
+		if ((get_current_time_ms() - ph->last_eat) >= dt->time_die)
+		{
+            ft_print(dt,ph->id, "died");
+            pthread_mutex_lock(&dt->mutex);
+            dt->is_dead = 1;
+            pthread_mutex_unlock(&dt->mutex);
+		}
+		if ((get_current_time_ms() - t) >= time)
 			return ;
 	}
 }

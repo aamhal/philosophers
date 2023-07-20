@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:32:44 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/18 23:03:28 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/19 03:20:52 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_Philosophers
 typedef struct s_data
 {
 	t_philo *p_philo;
+	int f;
 	int	num_philo;
 	int time_die;
 	int time_eat;
@@ -44,6 +45,8 @@ typedef struct s_data
 	pthread_mutex_t *forks;
 	pthread_mutex_t print;
 	pthread_mutex_t mutex;
+	pthread_mutex_t time;
+	pthread_mutex_t flag;
 }t_data;
 
 
@@ -56,12 +59,13 @@ void philo_info(t_data *data);
 int	ft_isdigit(int c);
 int	ft_atoi(const char *str);
 long long get_current_time_ms();
-void ft_usleep(long long time);
+void ft_usleep(long long time, t_data *dt, t_philo *ph);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 
 //philos
 int make_philo(t_data *data);
 void *routine(void *philo);
+void ft_print(t_data *data,int id,char *msg);
 
 
 #endif

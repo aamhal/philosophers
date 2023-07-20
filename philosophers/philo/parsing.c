@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:57 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/15 23:56:56 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/20 01:06:11 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	fill_struct(int ac, char **av, t_data *data)
 	if (ac == 6)
 		data->num_meal = ft_atoi(av[5]);
 	else
-		data->num_meal = 0;
+		data->num_meal = -1;
 	philo_info(data);
 }
 
@@ -58,8 +58,9 @@ void philo_info(t_data *data)
 	{
 		data->p_philo[i].id = i;
 		data->p_philo[i].d_data = data;
-		data->p_philo[i].num_eaten = 0;
+		data->p_philo[i].num_eaten = data->num_meal;
 		data->p_philo[i].last_eat = 0;
+		data->f = 0;
 		data->p_philo[i].r_fork = i;
 		data->p_philo[i].l_fork = (i + 1) % data->num_philo;
 		i++;
