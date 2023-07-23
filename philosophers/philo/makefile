@@ -1,22 +1,22 @@
 Name = philo
-CC = cc #-g -fsanitize=thread
+CC = cc
 Flags = -Wall -Wextra -Werror
-SRC = main.c parsing.c philo_utiles.c philos.c
+SRC = main.c parsing.c philo_utils.c philo_utils2.c routine.c
 OBJ = $(SRC:.c=.o)
 
 all : $(Name)
 
 
 %.o : %.c philosophers.h
-	$(CC) $(Flags) -c $< -o $@
+	@$(CC) $(Flags) -c $< -o $@
 
 $(Name) : $(OBJ)
-	$(CC) $(Flags) $(OBJ) -o $(Name)
+	@$(CC) $(Flags) $(OBJ) -o $(Name)
 
 clean :
 	@rm -rf *.o
 
 fclean : clean
-	@rm philo
+	@rm -rf philo
 
 re : fclean all

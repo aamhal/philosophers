@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:33:57 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/20 01:06:11 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/23 03:01:43 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	parsing(char **av)
 {
-	char *str;
-	int i;
-	int j;
+	char	*str;
+	int		i;
+	int		j;
 
 	i = 1;
 	while (av[i])
 	{
 		str = av[i];
 		j = 0;
-		while(str[j])
+		while (str[j])
 		{
 			if (ft_isdigit(str[j]) == -1)
 				return (-1);
@@ -34,8 +34,10 @@ int	parsing(char **av)
 	return (0);
 }
 
-void	fill_struct(int ac, char **av, t_data *data)
+t_data	*fill_struct(int ac, char **av)
 {
+	t_data	*data;
+
 	data = malloc(sizeof(t_data));
 	data->num_philo = ft_atoi(av[1]);
 	data->time_die = ft_atoi(av[2]);
@@ -45,13 +47,15 @@ void	fill_struct(int ac, char **av, t_data *data)
 		data->num_meal = ft_atoi(av[5]);
 	else
 		data->num_meal = -1;
-	philo_info(data);
+	return (data);
 }
 
-void philo_info(t_data *data)
+void	philo_info(t_data **dt)
 {
-	int i;
+	t_data	*data;
+	int		i;
 
+	data = *dt;
 	data->p_philo = malloc(sizeof(t_philo) * data->num_philo);
 	i = 0;
 	while (i < data->num_philo)
@@ -65,5 +69,4 @@ void philo_info(t_data *data)
 		data->p_philo[i].l_fork = (i + 1) % data->num_philo;
 		i++;
 	}
-	make_philo(data);
 }
