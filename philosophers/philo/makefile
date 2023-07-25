@@ -1,6 +1,6 @@
 Name = philo
 CC = cc
-Flags = -Wall -Wextra -Werror
+Flags = -Wall -Wextra -Werror 
 SRC = main.c parsing.c philo_utils.c philo_utils2.c routine.c
 OBJ = $(SRC:.c=.o)
 
@@ -17,6 +17,6 @@ clean :
 	@rm -rf *.o
 
 fclean : clean
-	@rm -rf philo
+	@rm -rf $(Name)
 
 re : fclean all

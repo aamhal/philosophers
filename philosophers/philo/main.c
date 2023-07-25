@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 08:27:22 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/23 03:08:26 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/25 07:07:09 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	main(int ac, char **av)
 	}
 	data = fill_struct(ac, av);
 	philo_info(&data);
-	if (make_philo(&data) == -1)
-		return (ft_free(data), 1);
+	if (make_philo( &data) == -1)
+		return (1);
 	ft_free(data);
 	return (0);
 }

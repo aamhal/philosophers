@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 01:04:04 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/23 03:01:40 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/24 09:54:42 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int	make_philo(t_data **dt)
 
 	data = *dt;
 	i = 0;
-	data->forks = malloc(sizeof(pthread_mutex_t *) * data->num_philo);
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->mutex, NULL);
 	pthread_mutex_init(&data->flag, NULL);
 	pthread_mutex_init(&data->time, NULL);
-	while (i++ < data->num_philo)
-		pthread_mutex_init(&data->forks[i], NULL);
+	data->forks = malloc(sizeof(pthread_mutex_t *) * data->num_philo);
+	while (i < data->num_philo)
+		pthread_mutex_init(&data->forks[i++], NULL);
 	i = 0;
 	while (i < data->num_philo)
 	{	
@@ -60,6 +60,9 @@ int	make_philo(t_data **dt)
 			return (-1);
 		i++;
 	}
+	i = 0;
+	while (i < data->num_philo)
+		pthread_detach(data->p_philo[i++].ph);
 	main_th(data);
 	mutex_destroy(data);
 	return (0);

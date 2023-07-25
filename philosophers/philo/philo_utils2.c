@@ -6,7 +6,7 @@
 /*   By: aamhal <aamhal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 01:38:58 by aamhal            #+#    #+#             */
-/*   Updated: 2023/07/23 03:07:10 by aamhal           ###   ########.fr       */
+/*   Updated: 2023/07/25 07:07:24 by aamhal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,7 @@ void	*rot(void *philo)
 
 void	ft_free(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	while (i++ < data->num_meal)
-	{
-		free(&data->p_philo->ph[i]);
-		free(&data->p_philo[i]);
-		free(&data->forks[i]);
-	}
+	free(data->p_philo);
+	free(data->forks);
 	free(data);
 }
